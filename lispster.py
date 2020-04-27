@@ -9,24 +9,7 @@ List = list
 Exp = (Atom, List)
 Env = dict
 
-
-def standard_env():
-    "An Environment with some Scheme procedures"
-
-    env = Env()
-    env.update(vars(math))
-    env.update({
-        '+': op.add, '-': op.sub, '*': op.mul, '/': op.truediv,
-        '>': op.gt, '<': op.lt, '>=': op.ge, '<=': op.le, '=': op.eq,
-        'abs':     abs,
-        'append':  op.add,
-        'apply': lambda proc, args: proc(*args),
-        'begin': lambda *x: x[-1],
-        'car': lambda x: x[0],
-        'cdr': lambda x: x[1:],
-        'cons': lambda x, y: [x] + y
-    })
-    return env
+# Parse and Tokenize
 
 
 def parse(program):
@@ -81,6 +64,27 @@ def atom(token):
 
 def tokenize(chars):
     return chars.replace("(", " ( ").replace(")", " ) ").split()
+
+# Environment Vars
+
+
+def standard_env():
+    "An Environment with some Scheme procedures"
+
+    env = Env()
+    env.update(vars(math))  # sin, cos, sqrt, pi ...
+    env.update({
+        '+': op.add, '-': op.sub, '*': op.mul, '/': op.truediv,
+        '>': op.gt, '<': op.lt, '>=': op.ge, '<=': op.le, '=': op.eq,
+        'abs':     abs,
+        'append':  op.add,
+        'apply': lambda proc, args: proc(*args),
+        'begin': lambda *x: x[-1],
+        'car': lambda x: x[0],
+        'cdr': lambda x: x[1:],
+        'cons': lambda x, y: [x] + y
+    })
+    return env
 
 
 global_env = standard_env()
