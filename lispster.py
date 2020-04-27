@@ -2,6 +2,10 @@
 Symbol = str
 List = list
 Number = (int, float)
+Atom = (Symbol, Number)
+List = list
+Exp = (Atom, List)
+Env = dict
 
 
 def parse(program):
