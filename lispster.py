@@ -88,6 +88,36 @@ def standard_env():
 
 
 global_env = standard_env()
+
+
+# Eval
+
+def eval(x, env=global_env):
+
+    if isinstance(x, Symbol):
+        # if its a symbol we return what it can do from the Env
+        return env[x]
+    elif isinstance(x, Number):
+        return x
+    elif x[0] == "if":
+        # We evaluate the condition, if true we pass the `conseq`
+        # Otherwise we pass the `alt`
+        (_, cond, cond_true, cond_false) = x
+        exp = (cont_true if eval(cond, env) else cont_false)
+        return eval(exp, env)
+    elif x[0] == "define":
+        # If something new is defined we add it to the scope by adding it
+        # as a Env var
+        (_, symbol, exp) = x
+        env[symbol] = eval(exp, env)
+    else:
+        # Procedure call. Can be anything other than if or eval
+        # We evaluate the expression and return the result
+        proc = eval(x[0], env)
+        args = [eval(arg, env) for arg in x[1:]]
+        return proc(*args)
+
+
 program = "(begin (define r 10) (* pi (* r r)))"
-ans = parse(program)
+ans = eval(parse(program))
 print(ans)
